@@ -48,6 +48,15 @@ try {
       check(await page.locator('article.product-card:visible').count() === 1, 'Catalog category filter');
       await page.locator('button.tab[data-filter="all"]').click();
       check(await page.locator('article.product-card:visible').count() === 3, 'Catalog category reset');
+      await page.locator('[data-demo-store="two"]').click();
+      check(await page.locator('article.product-card:visible').count() === 2, 'Second store has distinct menu');
+      check(await page.locator('[data-demo-store="two"]').getAttribute('aria-pressed') === 'true', 'Second store selected');
+      check(await page.locator('button.tab[data-filter="food"]').isHidden(), 'Unavailable category hidden for second store');
+      await page.locator('button.tab[data-filter="grill"]').click();
+      check(await page.locator('article.product-card:visible').count() === 1, 'Category filtering works for second store');
+      await page.locator('[data-demo-store="one"]').click();
+      check(await page.locator('article.product-card:visible').count() === 3, 'Switching back restores the first store menu');
+      check(await page.locator('button.tab[data-filter="food"]').isVisible(), 'First store extra category returns');
       const search = page.locator('#locationSearch');
       await search.fill('9-й');
       check(await page.locator('article.location-card:visible').count() === 1, 'Store search finds a specific record');
